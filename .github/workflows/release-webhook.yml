@@ -2,7 +2,7 @@ name: Release webhook
 
 on:
   release:
-    types: [created]
+    types: [created, published]
 
 jobs:
   notify:
