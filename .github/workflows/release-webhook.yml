@@ -1,0 +1,26 @@
+name: Release webhook
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call release endpoint
+        env:
+          API_HOST: ${{ secrets.X_API_HOST }}
+          API_SECRET: ${{ secrets.X_API_SECRET }}
+        run: |
+          if [ -z "$API_HOST" ]; then
+            echo "::error::X_API_HOST repository secret is not set"
+            exit 1
+          fi
+          if [ -z "$API_SECRET" ]; then
+            echo "::error::X_API_SECRET repository secret is not set"
+            exit 1
+          fi
+          curl -sfS -X POST \
+            -H "x-api-secret: ${API_SECRET}" \
+            "http://${API_HOST}:30081/txt"
